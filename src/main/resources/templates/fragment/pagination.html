@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div class="pagination" th:fragment="pagination (page, lastPage, range, queryString)">
+
+        <ul class="pagination">
+
+            <li th:if="${page} != 1" class="page-list page-list--prev page-list__button">
+                <a th:href="'?' + ${queryString} + '&page=1'">
+                    <<
+                </a>
+            </li>
+
+            <li th:if="${page} != 1" class="page-list page-list--prev page-list__button">
+                <a th:href="'?' + ${queryString} + '&page=' + (${page - 1})">
+                    <
+                </a>
+            </li>
+
+            <th:block th:each="i : ${#numbers.sequence(range, 1)}">
+                <li class="page-list page-list--prev" th:if="${page - i} > 0">
+                    <a th:href="'?' + ${queryString} + '&page=' + (${page - i})" th:text="${page} - ${i}"></a>
+                </li>
+            </th:block>
+
+            <li class="page-list page-list--current">
+                <p th:text="${page}"></p>
+            </li>
+
+            <th:block th:each="i : ${#numbers.sequence(1, range)}">
+                <li class="page-list page-list--next" th:if="${page + i} <= ${lastPage}">
+                    <a th:href="'?' + ${queryString} + '&page=' + (${page + i})" th:text="${page} + ${i}"></a>
+                </li>
+            </th:block>
+
+            <li th:if="${page} < ${lastPage}" class="page-list page-list--next page-list__button">
+                <a th:href="'?' + ${queryString} + '&page=' + (${page + 1})">
+                    >
+                </a>
+            </li>
+
+            <li th:if="${page != lastPage}" class="page-list page-list--next page-list__button">
+                <a th:href="'?' + ${queryString} + '&page=' + ${lastPage}">
+                    >>
+                </a>
+            </li>
+
+        </ul>
+
+        <style>
+            .pagination ul li {
+                display: inline-block;
+                padding: 5px 10px;
+            }
+
+            .pagination ul li.page-list--current {
+                border-radius: 50px;
+                background-color: black;
+                color: white;
+            }
+
+
+            .pagination ul li.page-list--current p {
+                margin: 0;
+            }
+        </style>
+
+    </div>
+</body>
+
+

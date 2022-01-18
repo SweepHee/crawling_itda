@@ -1,0 +1,45 @@
+
+<ul class="pagination">
+
+    <li th:if="${page} != 1" class="page-list page-list--prev page-list__button">
+        <a href="/?page=1" th:data-page="1">
+            <<
+        </a>
+    </li>
+
+    <li th:if="${page} != 1" class="page-list page-list--prev page-list__button">
+        <a th:href="'/?page=' + (${page} - 1)" th:data-page="${page} - 1">
+            <
+        </a>
+    </li>
+
+    <th:block th:each="i : ${#numbers.sequence(range, 1)}">
+        <li th:if="(${page} - ${i}) > 0" class="page-list page-list--prev">
+            <a th:href="'/?page=' + (${page} - ${i})" th:text="${page} - ${i}" th:data-page="${page} - ${i}"></a>
+        </li>
+    </th:block>
+
+    <li class="page-list page-list--current">
+        <p th:text="${page}" th:data-page="${page}"></p>
+    </li>
+
+    <th:block th:each="i : ${#numbers.sequence(1, range)}">
+        <li class="page-list page-list--next" th:if="(${page} + ${i}) <= ${lastPage}">
+            <a th:href="'/?page=' + (${page} + ${i})" th:text="${page} + ${i}" th:data-page="${page} + ${i}"></a>
+        </li>
+    </th:block>
+
+    <li th:if="${page} < ${lastPage}" class="page-list page-list--next page-list__button">
+        <a th:href="'/?page=' + (${page} + 1)" th:data-page="${page} + 1">
+            >
+        </a>
+    </li>
+
+    <li th:if="${page != lastPage}" class="page-list page-list--next page-list__button">
+        <a th:href="'/?page=' + ${lastPage}" th:data-page="${lastPage}">
+            >>
+        </a>
+    </li>
+
+</ul>
+

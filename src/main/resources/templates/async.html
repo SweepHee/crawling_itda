@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <style>
+
+        ul li {
+            display: inline-block;
+            padding: 5px 10px;
+        }
+
+        ul li.page-list--current {
+            border-radius: 50px;
+            background-color: black;
+            color: white;
+        }
+
+        ul li.page-list--current p {
+            margin: 0;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="listWrap">
+        <table>
+            <tr th:each="list : ${lists}">
+                <th>
+                    idx
+                </th>
+                <td th:text="${list.idx}"></td>
+                <th>
+                    account_id
+                </th>
+                <td th:text="${list.id}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="paginationWrap">
+
+    </div>
+
+
+    <script th:inline="javascript">
+
+        function paginationReloader(page, keyword) {
+
+            $.ajax({
+                url: "/async/list",
+                data: {
+                    page: page,
+                    keyword: keyword
+                },
+                type: "GET",
+                dataType: "html",
+                success: function(data) {
+                    const list = document.getElementById("listWrap");
+                    list.innerHTML = data;
+                }
+            })
+
+            $.ajax({
+                url: "/async/pagination",
+                data: {
+                    page: page,
+                    keyword: keyword
+                },
+                type: "GET",
+                dataType: "html",
+                success: function(data) {
+                    const pagination = document.getElementById("paginationWrap");
+                    pagination.innerHTML = data;
+
+                }
+            })
+
+        }
+
+        $(document).on("click", "a", function () {
+            const page = $(this).data("page");
+            const keyword = $(this).data("keyword") ?? "";
+
+            paginationReloader(page, keyword);
+            return false;
+        })
+
+
+        const page = [[ ${page} ]]
+        const keyword = [[ ${keyword} ]]
+        paginationReloader(page, keyword);
+
+
+
+    </script>
+
+</body>
+</html>

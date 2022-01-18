@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="security.security.Mapper.ContentsMapper">
+
+
+    <select id="isUrl" parameterType="map" resultType="boolean">
+        select exists(select 1 from itda_web.contents where bodyurl = #{bodyurl})
+    </select>
+
+
+    <insert id="create" parameterType="ContentsVo">
+        insert into itda_web.contents
+            (
+                targetname, targetnamecode, targettype, targettypecode, targetcost, loccode,
+                title, bodyurl, end_time, save_time, cntview
+            )
+        values
+        <foreach collection="contentsVos" item="vo" index="index" separator=",">
+            (
+                #{vo.targetname}, #{vo.targetnamecode}, #{vo.targettype}, #{vo.targettypecode}, #{vo.targetcost},
+                #{vo.loccode}, #{vo.title}, #{vo.bodyurl}, #{vo.endTime}, now(), 0
+            )
+        </foreach>
+    </insert>
+
+</mapper>
+
