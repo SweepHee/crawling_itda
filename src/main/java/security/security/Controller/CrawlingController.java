@@ -10,12 +10,6 @@ import security.security.Crawling.*;
 public class CrawlingController {
 
     @Autowired
-    Upbeat upbeat;
-
-    @Autowired
-    TestCrawling testCrawling;
-
-    @Autowired
     RcdaCrawling rcdaCrawling;
 
     @Autowired
@@ -43,11 +37,26 @@ public class CrawlingController {
     SygcCrawling sygcCrawling;
 
 
+    /* 서울시 청년활동지원센터 */
+    @Autowired
+    SeoulBiUosCrawling seoulBiUosCrawling;
+
+    /* 성북구 중장년 기술창업센터 */
+    @Autowired
+    SeoulSsscCrawling seoulSsscCrawling;
+
+    /* 송파구일자리통합지원센터 */
+    @Autowired
+    SeoulSongpaCrawling seoulSongpaCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
 //        seoulSbdcCrawling.craw();
-        sygcCrawling.craw();
+//        sygcCrawling.craw();
+//        seoulBiUosCrawling.craw();
+//        seoulSsscCrawling.craw();
+        seoulSongpaCrawling.craw();
         return "/craw";
     }
 
