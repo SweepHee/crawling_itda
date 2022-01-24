@@ -1,5 +1,11 @@
 package security.security.Controller;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,8 +23,10 @@ import security.security.Vo.MemberVo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -224,6 +232,55 @@ public class MainController {
 //            System.out.println(e.getMessage());
 //        }
         return null;
+    }
+
+    @GetMapping("/excel")
+    public String excel() {
+        return "excel";
+    }
+
+
+    @PostMapping("/excel/read")
+    public String readExcel (@RequestParam("file") MultipartFile file, Model model) throws IOException {
+
+        List<HashMap<String, String>> dataList = new ArrayList<>();
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+
+        if(!extension.equals("xlsx") && !extension.equals("xls")) {
+            throw new IOException("엑셀파일만 업로드 해주세요.");
+        }
+
+        Workbook workbook = null;
+
+        if (extension.equals("xlsx")) {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } else if (extension.equals("xls")) {
+            workbook = new HSSFWorkbook(file.getInputStream());
+        }
+
+        Sheet worksheet = workbook.getSheetAt(0);
+
+        for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) { // 4
+
+            Row row = worksheet.getRow(i);
+
+            HashMap<String, String> param = new HashMap<>();
+//            param.set("")
+
+//            ExcelData data = new ExcelData();
+
+//            data.setNum((int) row.getCell(0).getNumericCellValue());
+//            data.setName(row.getCell(1).getStringCellValue());
+//            data.setEmail(row.getCell(2).getStringCellValue());
+
+//            dataList.add(data);
+        }
+
+        model.addAttribute("datas", dataList); // 5
+
+        return "excelList";
+
+
     }
 
 

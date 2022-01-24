@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+    <table>
+        <tr th:each="list : ${lists}">
+            <th>
+                idx
+            </th>
+            <td th:text="${list.idx}"></td>
+            <th>
+                account_id
+            </th>
+            <td th:text="${list.id}"></td>
+        </tr>
+    </table>
+
+    <th:block th:replace="fragment/pagination :: pagination(${page}, ${lastPage}, 4, ${queryString})" ></th:block>
+
+</body>
+</html>
