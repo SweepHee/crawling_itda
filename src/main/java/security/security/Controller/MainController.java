@@ -2,44 +2,51 @@ package security.security.Controller;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import security.security.Global.GlobalFunction;
 import security.security.Service.BoardService;
+import security.security.Service.ExcelService;
 import security.security.Service.MemberService;
+import security.security.Service.SiSelectionsService;
 import security.security.Vo.BoardVo;
 import security.security.Vo.ImageLink;
 import security.security.Vo.MemberVo;
+import security.security.Vo.SiSelectionsVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MainController {
 
-    @Autowired
-    MemberService memberService;
+//    @Autowired
+//    MemberService memberService;
 
     @Autowired
     BoardService boardService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    ExcelService excelService;
+
+    @Autowired
+    SiSelectionsService siSelectionsService;
+
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
 
     @Autowired
     GlobalFunction globalFunction;
@@ -83,64 +90,64 @@ public class MainController {
 //        return "index";
 //    }
 
-    @GetMapping("/async")
-    public String async(HttpServletRequest request, Model model) {
-
-        int page = request.getParameter("page") != null
-                ? Integer.parseInt(request.getParameter("page"))
-                : 1;
-
-        int limit = 5;
-        int offset = (page-1) * limit;
-        List<MemberVo> memberVoList = memberService.getPaginationList(offset, limit);
-
-        String pageExcludeQueryString = globalFunction.splitQueryString(request, "page");
-
-        int totalCount = memberService.getTotalCount();
-
-        int lastPage = (int) Math.ceil(totalCount/limit);
-
-        model.addAttribute("lists", memberVoList);
-        model.addAttribute("totalCount", totalCount);
-        model.addAttribute("page", page);
-        model.addAttribute("lastPage", lastPage);
-        model.addAttribute("paginationAsync", false);
-        model.addAttribute("queryString", pageExcludeQueryString);
-
-        return "async";
-    }
-
-
-    @GetMapping("/async/list")
-    public String asyncGetList(HttpServletRequest request, Model model) {
-
-        int page = Integer.parseInt(request.getParameter("page"));
-        int limit = 5;
-        int offset = (page-1) * limit;
-        List<MemberVo> memberVoList = memberService.getPaginationList(offset, limit);
-
-        model.addAttribute("lists", memberVoList);
-
-        return "component/list";
-    }
+//    @GetMapping("/async")
+//    public String async(HttpServletRequest request, Model model) {
+//
+//        int page = request.getParameter("page") != null
+//                ? Integer.parseInt(request.getParameter("page"))
+//                : 1;
+//
+//        int limit = 5;
+//        int offset = (page-1) * limit;
+//        List<MemberVo> memberVoList = memberService.getPaginationList(offset, limit);
+//
+//        String pageExcludeQueryString = globalFunction.splitQueryString(request, "page");
+//
+//        int totalCount = memberService.getTotalCount();
+//
+//        int lastPage = (int) Math.ceil(totalCount/limit);
+//
+//        model.addAttribute("lists", memberVoList);
+//        model.addAttribute("totalCount", totalCount);
+//        model.addAttribute("page", page);
+//        model.addAttribute("lastPage", lastPage);
+//        model.addAttribute("paginationAsync", false);
+//        model.addAttribute("queryString", pageExcludeQueryString);
+//
+//        return "async";
+//    }
 
 
-    @GetMapping("/async/pagination")
-    public String pagination(HttpServletRequest request, Model model) {
-
-        int limit = 5;
-        int totalCount = memberService.getTotalCount();
-        int lastPage = (int) Math.ceil(totalCount/limit);
-
-        model.addAttribute("page", request.getParameter("page"));
-        model.addAttribute("keyword", request.getParameter("keyword"));
-        model.addAttribute("totalCount", totalCount);
-        model.addAttribute("lastPage", lastPage);
-        model.addAttribute("range", 3);
-
-        return "component/pagination";
-
-    }
+//    @GetMapping("/async/list")
+//    public String asyncGetList(HttpServletRequest request, Model model) {
+//
+//        int page = Integer.parseInt(request.getParameter("page"));
+//        int limit = 5;
+//        int offset = (page-1) * limit;
+//        List<MemberVo> memberVoList = memberService.getPaginationList(offset, limit);
+//
+//        model.addAttribute("lists", memberVoList);
+//
+//        return "component/list";
+//    }
+//
+//
+//    @GetMapping("/async/pagination")
+//    public String pagination(HttpServletRequest request, Model model) {
+//
+//        int limit = 5;
+//        int totalCount = memberService.getTotalCount();
+//        int lastPage = (int) Math.ceil(totalCount/limit);
+//
+//        model.addAttribute("page", request.getParameter("page"));
+//        model.addAttribute("keyword", request.getParameter("keyword"));
+//        model.addAttribute("totalCount", totalCount);
+//        model.addAttribute("lastPage", lastPage);
+//        model.addAttribute("range", 3);
+//
+//        return "component/pagination";
+//
+//    }
 
 
     @GetMapping("/login")
@@ -152,7 +159,7 @@ public class MainController {
 //        List<BoardVo> boardVo = boardService.getList();
 //        System.out.println(boardVo.toString());
 
-        System.out.println(passwordEncoder.encode("1234"));
+//        System.out.println(passwordEncoder.encode("1234"));
 
 
         return "login";
@@ -241,46 +248,9 @@ public class MainController {
 
 
     @PostMapping("/excel/read")
-    public String readExcel (@RequestParam("file") MultipartFile file, Model model) throws IOException {
-
-        List<HashMap<String, String>> dataList = new ArrayList<>();
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-
-        if(!extension.equals("xlsx") && !extension.equals("xls")) {
-            throw new IOException("엑셀파일만 업로드 해주세요.");
-        }
-
-        Workbook workbook = null;
-
-        if (extension.equals("xlsx")) {
-            workbook = new XSSFWorkbook(file.getInputStream());
-        } else if (extension.equals("xls")) {
-            workbook = new HSSFWorkbook(file.getInputStream());
-        }
-
-        Sheet worksheet = workbook.getSheetAt(0);
-
-        for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) { // 4
-
-            Row row = worksheet.getRow(i);
-
-            HashMap<String, String> param = new HashMap<>();
-//            param.set("")
-
-//            ExcelData data = new ExcelData();
-
-//            data.setNum((int) row.getCell(0).getNumericCellValue());
-//            data.setName(row.getCell(1).getStringCellValue());
-//            data.setEmail(row.getCell(2).getStringCellValue());
-
-//            dataList.add(data);
-        }
-
-        model.addAttribute("datas", dataList); // 5
-
-        return "excelList";
-
-
+    public String readExcel (@RequestParam("file") MultipartFile file) throws IOException {
+        excelService.uploadSiSelectionsList(file);
+        return "redirect:/excel";
     }
 
 

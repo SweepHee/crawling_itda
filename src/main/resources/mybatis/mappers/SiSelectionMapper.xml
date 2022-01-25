@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="security.security.Mapper.SiSelectionsMapper">
+
+    <select id="isName" parameterType="SiSelectionsVO" resultType="boolean">
+        select exists(select * from itda_web.si_selections where name = #{name})
+    </select>
+
+    <insert id="upload" parameterType="SiSelectionsVO">
+        insert into itda_web.si_selections
+        ("name", price, tag, description, created_at, etc)
+        values
+        <foreach collection="vos" item="vo" index="index" separator=",">
+            (
+             #{vo.name},
+             #{vo.price}::integer,
+             #{vo.tag},
+             #{vo.description},
+             now(),
+             #{vo.etc}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="SiSelectionsVO">
+        update itda_web.si_selections set
+            name = #{name},
+            price = #{price}::integer,
+            tag = #{tag},
+            description = #{description},
+            updated_at = now(),
+            etc = #{etc}
+        where name = #{name}
+    </update>
+
+</mapper>
