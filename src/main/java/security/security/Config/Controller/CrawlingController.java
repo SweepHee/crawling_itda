@@ -1,4 +1,4 @@
-package security.security.Controller;
+package security.security.Config.Controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,10 @@ public class CrawlingController {
     @Autowired
     SeoulSongpaCrawling seoulSongpaCrawling;
 
+    /* 한국콘텐츠진흥원 */
+    @Autowired
+    SeoulKoccaCrawling seoulKoccaCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
@@ -56,7 +60,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        seoulSongpaCrawling.craw();
+        seoulKoccaCrawling.craw();
         return "/craw";
     }
 
