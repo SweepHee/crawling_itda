@@ -1,6 +1,7 @@
 package security.security.Config.Controller;
 
 
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +62,18 @@ public class CrawlingController {
     @Autowired
     SeoulYcstartupCrawling seoulYcstartupCrawling;
 
+    /* 건국대학교 창업지원단 */
+    @Autowired
+    SeoulKonkukCrawling seoulKonkukCrawling;
+
+    /* 건국대학교 창업보육센터 */
+    @Autowired
+    SeoulKkuCrawling seoulKkuCrawling;
+
+    /* 서울창업카페신촌점 */
+    @Autowired
+    SeoulStartupcafeCrawling seoulStartupcafeCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
@@ -68,7 +81,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        seoulYcstartupCrawling.craw();
+        seoulKkuCrawling.craw();
         return "/craw";
     }
 

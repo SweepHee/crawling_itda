@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
-public class SeoulKkuCrawling implements Crawling {
+public class SeoulStartupcafeCrawling implements Crawling {
 
     @Autowired
     ContentsMapper contentsMapper;
@@ -30,12 +28,12 @@ public class SeoulKkuCrawling implements Crawling {
     Environment environment;
 
     /*
-     * 건국대학교 창업보육센터
-     * http://bigc.kku.ac.kr/
+     * 서울창업카페신촌점
+     * http://seoulstartupcafe.com/
      *  */
 
-    private String url = "http://bigc.kku.ac.kr/bbs/board.php?bo_table=sub0402&page=";
-    private int page = 2;
+    private String url = "http://seoulstartupcafe.com/?q=YToxOntzOjEyOiJrZXl3b3JkX3R5cGUiO3M6MzoiYWxsIjt9&page=";
+    private int page = 3;
 
     @Override
     public void setPage(int page) {
@@ -67,13 +65,14 @@ public class SeoulKkuCrawling implements Crawling {
         WebDriver driver = new ChromeDriver(service);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
-        List<ContentsVo> contentsVos = new ArrayList<>();
         ContentsVo contentsVo = new ContentsVo();
-        contentsVo.setTitle("건국대학교창업보육센터");
-        contentsVo.setUrl("http://bigc.kku.ac.kr");
+        contentsVo.setTitle("서울창업카페신촌점");
+        contentsVo.setUrl("http://seoulstartupcafe.com");
         contentsVo.setLocation("C02");
         contentsVo.setActiveYn("Y");
         contentsVo.setErrorYn("N");
+        List<ContentsVo> contentsVos = new ArrayList<>();
+
 
         for (int i=page; i>0; i--) {
 
@@ -83,33 +82,30 @@ public class SeoulKkuCrawling implements Crawling {
 
                 try {
 
-                    WebElement titleXpath = driver.findElement(By.xpath("//*[@id=\"fboardlist\"]/div/table/tbody/tr[" + j + "]/td[2]/div/a"));
-
-                    Pattern typePattern = Pattern.compile("\\[(.*?)\\]"); // 대괄호안에 문자 뽑기
-                    Matcher typeMatcher = typePattern.matcher(titleXpath.getText());
-                    ArrayList<String> typePatternArray = new ArrayList<String>();
-
-                    while (typeMatcher.find()) {
-                        typePatternArray.add(typeMatcher.group());
-                    }
+                    WebElement titleXpath = driver.findElement(By.xpath("//*[@id=\"post_card_b202011251f4f5cd95147f\"]/div[" + j + "]/div/span/div[2]/div/div[1]"));
+                    WebElement targetXpath = driver.findElement(By.xpath("//*[@id=\"post_card_b202011251f4f5cd95147f\"]/div[" + j + "]/div/span/div[2]/div/div[1]/a/em"));
+                    WebElement urlXpath = driver.findElement(By.xpath("//*[@id=\"post_card_b202011251f4f5cd95147f\"]/div[" + j + "]/div/span/div[2]"));
 
                     String title = titleXpath.getText();
-                    String url = titleXpath.getAttribute("href");
-                    String targettype = typePatternArray.get(0).replaceAll("\\[", "").replaceAll("\\]", "");
+                    String target = targetXpath.getText();
+                    String url = urlXpath.getAttribute("onclick");
+
+                    String targettype = target.replaceAll("#", "");
+                    String bodyurl = "http://seoulstartupcafe.com/" + url.replaceAll("location.href=","").replaceAll("'","");
 
                     ContentsVo vo = new ContentsVo();
-                    vo.setTargetname("건국대학교 창업보육센터");
+                    vo.setTargetname("서울창업카페신촌점");
                     vo.setTargetnamecode("임의코드");
                     vo.setTargettype(targettype);
                     vo.setTargettypecode(targettype);
                     vo.setTargetcost("-");
                     vo.setLoccode("C02");
                     vo.setTitle(title);
-                    vo.setBodyurl(url);
+                    vo.setBodyurl(bodyurl);
                     vo.setEndTime("");
                     System.out.println(vo.toString());
                     HashMap<String, String> params = new HashMap<>();
-                    params.put("bodyurl", url);
+                    params.put("bodyurl", bodyurl);
                     boolean isUrl = contentsMapper.isUrl(params);
                     if (!isUrl) {
                         contentsVos.add(vo);
