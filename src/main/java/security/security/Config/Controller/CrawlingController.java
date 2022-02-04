@@ -94,6 +94,14 @@ public class CrawlingController {
     @Autowired
     SeoulYonseiCrawling seoulYonseiCrawling;
 
+    /* 한국여성벤처협회 */
+    @Autowired
+    SeoulKovwaCrawling seoulKovwaCrawling;
+
+    /* 숭실대학교 창업지원단 */
+    @Autowired
+    SeoulSsuCrawling seoulSsuCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
