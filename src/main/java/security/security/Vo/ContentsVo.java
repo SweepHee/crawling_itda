@@ -23,5 +23,8 @@ public class ContentsVo {
     private String endTime;
     private String saveTime;
     private int cntview;
-
+    private String url;
+    private String location;
+    private String activeYn;
+    private String errorYn;
 }

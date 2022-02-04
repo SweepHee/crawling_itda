@@ -11,5 +11,6 @@ public interface ContentsMapper {
 
     public void create(List<ContentsVo> contentsVos);
     public boolean isUrl(HashMap<String, String> params);
+    public void createMaster(ContentsVo contentsVo);
 
 }

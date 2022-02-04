@@ -24,5 +24,20 @@
         </foreach>
     </insert>
 
+    <insert id="createMaster" parameterType="ContentsVo">
+        insert into itda_web.crawling_mst
+            (id, title, url, active_yn, error_yn, location, created_at, updated_at, last_crawling_dt)
+        values
+            ((select coalesce(max(id)+1,1) from itda_web.crawling_mst), #{title}, #{url}, #{activeYn}, #{errorYn}, #{location}, NOW(), NOW(), NOW())
+        ON CONFLICT(title)
+        DO UPDATE
+        set url = #{url},
+            location = #{location},
+            active_yn = #{activeYn},
+            error_yn = #{errorYn},
+            updated_at = NOW(),
+            last_crawling_dt = NOW()
+    </insert>
+
 </mapper>
 
