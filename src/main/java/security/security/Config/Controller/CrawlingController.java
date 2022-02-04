@@ -76,6 +76,7 @@ public class CrawlingController {
 
 
 
+
     /* 서울소셜벤처허브 */
     @Autowired
     SeoulSvhcCrawling seoulSvhcCrawling;
@@ -84,6 +85,27 @@ public class CrawlingController {
     @Autowired
     SeoulSocialEnterPrise seoulSocialEnterPrise;
 
+    /* 서울창업카페상봉점 */
+    @Autowired
+    SeoulSangbongCrawling seoulSangbongCrawling;
+
+    /* 서울창업디딤터 */
+    @Autowired
+    SeoulDidimentoCrawling seoulDidimentoCrawling;
+
+    /* 한양대학교창업지원단 */
+    @Autowired
+    SeoulHanyangCrawling seoulHanyangCrawling;
+
+    /* 카이스트창업원 */
+    @Autowired
+    SeoulKaistCrawling seoulKaistCrawling;
+
+    /* 연세대학교 창업지원관 */
+    @Autowired
+    SeoulYonseiCrawling seoulYonseiCrawling;
+
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
@@ -91,9 +113,13 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
+
 //        seoulKkuCrawling.craw();
 //        seoulSvhcCrawling.craw();
-        seoulSocialEnterPrise.craw();
+//        seoulSocialEnterPrise.craw();
+
+
+        seoulYonseiCrawling.craw();
 
         return "/craw";
     }
