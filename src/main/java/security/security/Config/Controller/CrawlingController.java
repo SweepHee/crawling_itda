@@ -102,6 +102,10 @@ public class CrawlingController {
     @Autowired
     SeoulSsuCrawling seoulSsuCrawling;
 
+    /* 상명대학교 창업지원센터 */
+    @Autowired
+    SeoulSmuCrawling seoulSmuCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
@@ -109,7 +113,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        seoulYonseiCrawling.craw();
+        seoulSmuCrawling.craw();
         return "/craw";
     }
 
