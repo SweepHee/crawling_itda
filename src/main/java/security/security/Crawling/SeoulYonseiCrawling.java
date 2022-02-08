@@ -83,8 +83,6 @@ public class SeoulYonseiCrawling implements Crawling {
             for(int j=2; j<22; j++) {
                     try {
 
-
-
                         WebElement titleXpath = driver.findElement(By.xpath("//*[@id='w20191011d845845dcd57c']/div/div[2]/div[2]/ul[" + j + "]/li[4]/a[2]/span"));
                         WebElement typeXpath = driver.findElement(By.xpath("//*[@id='w20191011d845845dcd57c']/div/div[2]/div[2]/ul[" + j + "]/li[3]/a"));
                         WebElement urlXpath = driver.findElement(By.xpath(" //*[@id='w20191011d845845dcd57c']/div/div[2]/div[2]/ul[11]/li[4]/a[2]"));

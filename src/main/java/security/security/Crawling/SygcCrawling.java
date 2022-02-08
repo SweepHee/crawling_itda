@@ -70,6 +70,13 @@ public class SygcCrawling implements Crawling {
 
         JavascriptExecutor jse = (JavascriptExecutor) driver;
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("서울시청년활동지원센터");
+        contentsVo.setUrl("https://www.sygc.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
+
         List<ContentsVo> contentsVos = new ArrayList<>();
 
         driver.get(url);
@@ -113,6 +120,8 @@ public class SygcCrawling implements Crawling {
                     }
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -123,9 +132,14 @@ public class SygcCrawling implements Crawling {
 
         /* 빈 리스트가 아니면 크레이트 */
         if (!contentsVos.isEmpty()) {
-            contentsMapper.create(contentsVos);
+            try{
+                contentsMapper.create(contentsVos);
+                contentsMapper.createMaster(contentsVo);
+            }catch (Exception e){
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+            }
         }
-
 
         driver.quit();
         service.stop();

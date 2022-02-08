@@ -142,6 +142,22 @@ public class CrawlingController {
     @Autowired
     SeoulBukbuCrawling seoulBukbuCrawling;
 
+    /* 한국문화예술교육진흥원 */
+    @Autowired
+    SeoulArteCrawling seoulArteCrawling;
+
+    /* 서울시청년활동지원센터 */
+    @Autowired
+    SeoulSehubCrawling seoulSehubCrawling;
+
+    /* 한국사회적기업진흥원 */
+    @Autowired
+    SeoulSocialEnterPrise seoulSocialEnterPrise;
+
+    /* 서울 소셜벤처허브 */
+    @Autowired
+    SeoulSvhcCrawling seoulSvhcCrawling;
+
     @GetMapping("/craw")
     public String index() throws InterruptedException {
 //        sbaCrawling.craw();
@@ -149,7 +165,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        seoulBukbuCrawling.craw();
+        youthSeoulCrawling.craw();
         return "/craw";
     }
 

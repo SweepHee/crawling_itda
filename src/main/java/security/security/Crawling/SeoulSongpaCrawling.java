@@ -67,6 +67,12 @@ public class SeoulSongpaCrawling implements Crawling {
 
         List<ContentsVo> contentsVos = new ArrayList<>();
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("송파구일자리통합지원센터");
+        contentsVo.setUrl("https://www.songpa.go.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
 
         for (int i=page; i>0; i--) {
 
@@ -102,6 +108,8 @@ public class SeoulSongpaCrawling implements Crawling {
                     }
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -112,7 +120,13 @@ public class SeoulSongpaCrawling implements Crawling {
 
         /* 빈 리스트가 아니면 크레이트 */
         if (!contentsVos.isEmpty()) {
-            contentsMapper.create(contentsVos);
+            try{
+                contentsMapper.create(contentsVos);
+                contentsMapper.createMaster(contentsVo);
+            }catch (Exception e){
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+            }
         }
 
         driver.quit();

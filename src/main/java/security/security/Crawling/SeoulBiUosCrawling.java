@@ -67,6 +67,13 @@ public class SeoulBiUosCrawling implements Crawling {
         WebDriver driver = new ChromeDriver(service);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("서대문구-서울시립대학교창원지원센터");
+        contentsVo.setUrl("http://bi.uos.ac.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
+
         List<ContentsVo> contentsVos = new ArrayList<>();
 
 
@@ -116,6 +123,8 @@ public class SeoulBiUosCrawling implements Crawling {
                     }
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -126,7 +135,13 @@ public class SeoulBiUosCrawling implements Crawling {
 
         /* 빈 리스트가 아니면 크레이트 */
         if (!contentsVos.isEmpty()) {
-            contentsMapper.create(contentsVos);
+            try{
+                contentsMapper.create(contentsVos);
+                contentsMapper.createMaster(contentsVo);
+            }catch (Exception e){
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+            }
         }
 
         driver.quit();

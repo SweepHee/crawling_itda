@@ -1,5 +1,7 @@
 package security.security.Crawling;
 
+import org.springframework.core.env.Environment;
+import org.checkerframework.checker.units.qual.A;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,6 +27,9 @@ public class SbscCrawling implements Crawling {
     @Autowired
     ContentsMapper contentsMapper;
 
+    @Autowired
+    Environment environment;
+
     /*
     *
     *  */
@@ -40,16 +45,12 @@ public class SbscCrawling implements Crawling {
     @Override
     public void craw() {
 
-        File driverFile = new File("/Users/seungheejeon/Desktop/workspace/2021_09/security/src/main/resources/chromedriver_96");
-
-
-        String driverFilePath = driverFile.getAbsolutePath();
-
+        String driverPath = environment.getProperty("chrome.driver.path");
+        File driverFile = new File(String.valueOf(driverPath));
 
         if (!driverFile.exists() && driverFile.isFile()) {
             throw new RuntimeException("Not found");
         }
-
 
         ChromeDriverService service = new ChromeDriverService.Builder()
                 .usingDriverExecutable(driverFile)
@@ -65,6 +66,13 @@ public class SbscCrawling implements Crawling {
         WebDriver driver = new ChromeDriver(service);
         WebDriverWait wait = new WebDriverWait(driver, 10);
         System.out.println("K-STARTUP 시작");
+
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("서울기업지원센터");
+        contentsVo.setUrl("https://sbsc.seoul.go.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
 
         List<ContentsVo> contentsVos = new ArrayList<>();
 
@@ -111,15 +119,23 @@ public class SbscCrawling implements Crawling {
                 Thread.sleep(500);
             }
 
-            /* 빈 리스트가 아니면 크레이트 */
-            if (!contentsVos.isEmpty()) {
-                contentsMapper.create(contentsVos);
-            }
-
-
         } catch (Exception e) {
+            contentsVo.setErrorYn("Y");
+            contentsMapper.createMaster(contentsVo);
             e.printStackTrace();
         } finally {
+
+            /* 빈 리스트가 아니면 크레이트 */
+            if (!contentsVos.isEmpty()) {
+                try{
+                    contentsMapper.create(contentsVos);
+                    contentsMapper.createMaster(contentsVo);
+                }catch (Exception e){
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
+                }
+            }
+
             driver.quit();
             service.stop();
         }

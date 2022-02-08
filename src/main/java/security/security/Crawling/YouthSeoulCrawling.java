@@ -67,6 +67,13 @@ public class YouthSeoulCrawling implements Crawling {
         WebDriver driver = new ChromeDriver(service);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("서울청년정책");
+        contentsVo.setUrl("https://youth.seoul.go.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
+
         List<ContentsVo> contentsVos = new ArrayList<>();
 
         try {
@@ -99,7 +106,7 @@ public class YouthSeoulCrawling implements Crawling {
                     String targettype = pattern.get(0).replaceAll("\\[", "").replaceAll("\\]", "");
 
                     ContentsVo vo = new ContentsVo();
-                    vo.setTargetname("서울청년포털");
+                    vo.setTargetname("서울청년정책");
                     vo.setTargetnamecode("임의코드");
                     vo.setTargettype(targettype);
                     vo.setTargettypecode(targettype);
@@ -122,20 +129,25 @@ public class YouthSeoulCrawling implements Crawling {
                 Thread.sleep(500);
             }
 
-            /* 빈 리스트가 아니면 크레이트 */
-            if (!contentsVos.isEmpty()) {
-                contentsMapper.create(contentsVos);
+            } catch (Exception e) {
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+                e.printStackTrace();
+            } finally {
+                /* 빈 리스트가 아니면 크레이트 */
+                if (!contentsVos.isEmpty()) {
+                    try{
+                        contentsMapper.create(contentsVos);
+                        contentsMapper.createMaster(contentsVo);
+                    }catch (Exception e){
+                        contentsVo.setErrorYn("Y");
+                        contentsMapper.createMaster(contentsVo);
+                    }
+                }
+
+                driver.quit();
+                service.stop();
             }
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            driver.quit();
-            service.stop();
         }
-
-    }
-
-
 }

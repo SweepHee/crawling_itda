@@ -122,6 +122,8 @@ public class SeoulSvhcCrawling implements Crawling {
 
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -130,10 +132,6 @@ public class SeoulSvhcCrawling implements Crawling {
         }
 
         /* 빈 리스트가 아니면 크레이트 */
-//        if (!contentsVos.isEmpty()) {
-//            contentsMapper.create(contentsVos);
-//        }
-
         if (!contentsVos.isEmpty()) {
             try{
                 contentsMapper.create(contentsVos);

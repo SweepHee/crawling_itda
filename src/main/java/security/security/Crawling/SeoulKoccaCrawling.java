@@ -65,6 +65,13 @@ public class SeoulKoccaCrawling implements Crawling {
         WebDriver driver = new ChromeDriver(service);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("한국콘텐츠진흥원");
+        contentsVo.setUrl("https://www.kocca.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
+
         List<ContentsVo> contentsVos = new ArrayList<>();
 
 
@@ -100,6 +107,8 @@ public class SeoulKoccaCrawling implements Crawling {
                     }
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -110,7 +119,13 @@ public class SeoulKoccaCrawling implements Crawling {
 
         /* 빈 리스트가 아니면 크레이트 */
         if (!contentsVos.isEmpty()) {
-            contentsMapper.create(contentsVos);
+            try{
+                contentsMapper.create(contentsVos);
+                contentsMapper.createMaster(contentsVo);
+            }catch (Exception e){
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+            }
         }
 
         driver.quit();

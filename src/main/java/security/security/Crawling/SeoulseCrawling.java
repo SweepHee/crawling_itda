@@ -67,6 +67,13 @@ public class SeoulseCrawling implements Crawling {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebDriverWait wait2 = new WebDriverWait(driver, 10);
 
+        ContentsVo contentsVo = new ContentsVo();
+        contentsVo.setTitle("서울사회적기업협의회");
+        contentsVo.setUrl("http://www.seoulse.kr/");
+        contentsVo.setLocation("C02");
+        contentsVo.setActiveYn("Y");
+        contentsVo.setErrorYn("N");
+
         List<ContentsVo> contentsVos = new ArrayList<>();
 
 
@@ -123,6 +130,8 @@ public class SeoulseCrawling implements Crawling {
                     }
 
                 } catch (Exception e) {
+                    contentsVo.setErrorYn("Y");
+                    contentsMapper.createMaster(contentsVo);
                     System.out.println(e.getMessage());
                 }
 
@@ -133,7 +142,13 @@ public class SeoulseCrawling implements Crawling {
 
         /* 빈 리스트가 아니면 크레이트 */
         if (!contentsVos.isEmpty()) {
-            contentsMapper.create(contentsVos);
+            try{
+                contentsMapper.create(contentsVos);
+                contentsMapper.createMaster(contentsVo);
+            }catch (Exception e){
+                contentsVo.setErrorYn("Y");
+                contentsMapper.createMaster(contentsVo);
+            }
         }
 
         driver.quit();
