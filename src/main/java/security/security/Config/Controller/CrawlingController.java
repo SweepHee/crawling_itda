@@ -11,9 +11,6 @@ import security.security.Crawling.*;
 public class CrawlingController {
 
     @Autowired
-    RcdaCrawling rcdaCrawling;
-
-    @Autowired
     KStartUpCrawling kStartUpCrawling;
 
     @Autowired
@@ -32,11 +29,6 @@ public class CrawlingController {
     /* 서울시 자영업지원센터 */
     @Autowired
     SeoulSbdcCrawling seoulSbdcCrawling;
-
-    /* 서울시 청년활동지원센터 */
-    @Autowired
-    SygcCrawling sygcCrawling;
-
 
     /* 서울시 청년활동지원센터 */
     @Autowired
@@ -165,7 +157,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        kStartUpCrawling.craw();
+        seoulSehubCrawling.craw();
         return "/craw";
     }
 

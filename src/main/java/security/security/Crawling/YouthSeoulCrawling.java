@@ -34,8 +34,8 @@ public class YouthSeoulCrawling implements Crawling {
      * https://youth.seoul.go.kr/
      *  */
 
-    private String url = "https://youth.seoul.go.kr/site/main/youth/politics/user/list?&pageSize=12&cp=";
-    private int page = 1;
+    private String url = "https://youth.seoul.go.kr/site/main/youth/politics/user/list?pageSize=12&searchType=0,0&category=%EC%B0%BD%EC%97%85&searchIndex=1&cp=";
+    private int page = 3;
 
     @Override
     public void setPage(int page) {
@@ -86,7 +86,7 @@ public class YouthSeoulCrawling implements Crawling {
                     WebElement endTimeXpath = driver.findElement(By.xpath("//*[@id=\"searchMove\"]/li["+j+"]/div/ul/li[1]"));
 
                     String title = titleXpath.getText();
-                    String endtime = endTimeXpath.getText();
+                    String endtime = endTimeXpath.getText().replaceAll("신청기간 : ","");
 
                     String url = titleXpath.getAttribute("onclick");
 

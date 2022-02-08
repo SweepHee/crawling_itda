@@ -33,7 +33,7 @@ public class SeoulSehubCrawling implements Crawling {
      * https://www.sygc.kr/
      *  */
 
-    private String url = "https://sehub.net/archives/category/alarm/opencat/page/";
+    private String url = "https://sehub.net/archives/category/alarm/opencat/opencat_outside/page/";
     private int page = 5;
 
     @Override
@@ -81,23 +81,22 @@ public class SeoulSehubCrawling implements Crawling {
         Thread.sleep(1500);
 
         for (int i=page; i>0; i--) {
-
             driver.get(url + i);
-
-            for(int j=1; j<10; j++) {
+            int index;
+            if(page==1){
+                index = 16;
+            }else {
+                index = 14;
+            }
+            for(int j=2; j<index; j++) {
 
                 try {
-
-                    WebElement titleXpath = driver.findElement(By.xpath("/html/body/main/div[1]/ul/li["+j+"]/a[1]/div[3]/h3"));
-                    WebElement bodyUrlXpath = driver.findElement(By.xpath("/html/body/main/div[1]/ul/li["+j+"]/a[1]"));
-                    WebElement endTimeXpath = driver.findElement(By.xpath("/html/body/main/div[1]/ul/li["+j+"]/a[1]/div[3]/ul/li[1]/span[2]"));
-                    WebElement targetTypeXpath = driver.findElement(By.xpath("/html/body/main/div[1]/ul/li["+j+"]/a[1]/div[2]/div[1]"));
+                    WebElement titleXpath = driver.findElement(By.xpath("/html/body/section/div/div/div[3]/table/tbody/tr["+ j +"]/td[2]/a"));
+                    WebElement targetTypeXpath = driver.findElement(By.xpath("/html/body/section/div/div/div[3]/table/tbody/tr["+ j +"]/td[4]"));
 
                     String title = titleXpath.getText();
-                    String url = bodyUrlXpath.getAttribute("href");
+                    String url = titleXpath.getAttribute("href");
                     String targettype = targetTypeXpath.getText();
-                    String endTime = endTimeXpath.getText();
-
 
                     ContentsVo vo = new ContentsVo();
                     vo.setTargetname("서울시청년활동지원센터");
@@ -108,12 +107,12 @@ public class SeoulSehubCrawling implements Crawling {
                     vo.setLoccode("C02");
                     vo.setTitle(title);
                     vo.setBodyurl(url);
-                    vo.setEndTime(endTime);
+                    vo.setEndTime("");
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("bodyurl", url);
                     boolean isUrl = contentsMapper.isUrl(params);
-                    if (!isUrl) {
+                    if (!isUrl && !targettype.equals("관리자")) {
                         contentsVos.add(vo);
                     }
 
