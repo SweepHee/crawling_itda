@@ -157,7 +157,7 @@ public class CrawlingController {
 //        sygcCrawling.craw();
 //        seoulBiUosCrawling.craw();
 //        seoulSsscCrawling.craw();
-        seoulSehubCrawling.craw();
+        seoulKoccaCrawling.craw();
         return "/craw";
     }
 

@@ -89,13 +89,12 @@ public class SeoulSbdcCrawling implements Crawling {
             jse.executeScript("movePage('"+ i +"');");
             Thread.sleep(1500);
 
-            for(int j=1; j<11; j++) {
+            for(int j=4; j<14; j++) {
 
                 try {
 
 //                    WebElement titleXpath = driver.findElement(By.xpath("//*[@id=\"container\"]/div/div/div["+j+"]/div[2]/a/text"));
                     String baseUrl = "https://www.seoulsbdc.or.kr/cs/supportBusinessDetail.do?mseq=";
-
                     WebElement bodyUrlXpath = driver.findElement(By.xpath("//*[@id=\"container\"]/div/div/div["+j+"]/div[2]/a"));
                     String onclickFn = bodyUrlXpath.getAttribute("onclick");
 

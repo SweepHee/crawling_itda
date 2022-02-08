@@ -82,11 +82,12 @@ public class SeoulKoccaCrawling implements Crawling {
             for(int j=1; j<13; j++) {
 
                 try {
-
-                    WebElement titleXpath = driver.findElement(By.xpath("//*[@id=\"frm\"]/div[2]/div/dl[" + j + "]/dt/a"));
+                    WebElement titleXpath = driver.findElement(By.xpath("/html/body/div[3]/form/div[2]/div/dl["+ j +"]/dt/a"));
+                    WebElement dateXpath = driver.findElement(By.xpath("/html/body/div[3]/form/div[2]/div/dl["+ j +"]/dd"));
 
                     String title = titleXpath.getText();
                     String bodyUrl = titleXpath.getAttribute("href");
+                    String entime = dateXpath.getText().replaceAll("접수기간 : ","");
 
                     ContentsVo vo = new ContentsVo();
                     vo.setTargetname("한국콘텐츠진흥원");
@@ -97,7 +98,7 @@ public class SeoulKoccaCrawling implements Crawling {
                     vo.setLoccode("C02");
                     vo.setTitle(title);
                     vo.setBodyurl(bodyUrl);
-                    vo.setEndTime("");
+                    vo.setEndTime(entime);
                     HashMap<String, String> params = new HashMap<>();
                     params.put("bodyurl", bodyUrl);
 

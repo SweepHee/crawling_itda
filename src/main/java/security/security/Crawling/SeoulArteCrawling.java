@@ -33,8 +33,8 @@ public class SeoulArteCrawling implements Crawling {
      * https://www.arte.or.kr/
      *  */
 
-    private String url = "https://www.arte.or.kr";
-    private int page = 1;
+    private String url = "https://www.arte.or.kr/notice/business/notice/Business_BoardList.do";
+    private int page = 2;
 
     @Override
     public void setPage(int page) {
@@ -83,6 +83,7 @@ public class SeoulArteCrawling implements Crawling {
 
         for (int i=page; i>0; i--) {
 
+            jse.executeScript("linkPage('"+ i +"');");
             Thread.sleep(1500);
 
             for(int j=1; j<16; j++) {
@@ -94,8 +95,8 @@ public class SeoulArteCrawling implements Crawling {
                     String baseUrl = "https://www.arte.or.kr/notice/business/notice/Business_BoardView.do?board_id=";
 
                     /* 숫자만 남기기 */
-                    String url = titleXpath.getAttribute("onclick");
-                    String intStr = url.replaceAll("goViewPage2", "").replaceAll("[^0-9]", "");
+                    String url = titleXpath.getAttribute("href");
+                    String intStr = url.replaceAll("javascript:fnView", "").replaceAll("\\(","").replaceAll("\\)","").replaceAll("'","").replaceAll(";","");
 
                     String bodyUrl = baseUrl + intStr;
 
@@ -103,7 +104,7 @@ public class SeoulArteCrawling implements Crawling {
                     String targettype = "사업공고";
 
                     ContentsVo vo = new ContentsVo();
-                    vo.setTargetname("한국사회적기업진흥원");
+                    vo.setTargetname("한국문화예술교육진흥원");
                     vo.setTargetnamecode("임의코드");
                     vo.setTargettype(targettype);
                     vo.setTargettypecode(targettype);
